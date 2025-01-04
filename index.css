@@ -2,9 +2,12 @@ body {
     background-color: #222;
 }
 
-canvas {
+#game-container {
+    background-color: cornflowerblue;
     position: absolute;
     left: 50%;
     top: 50%;
+    width: 640px;
+    height: 640px;
     translate: -50% -50%;
 }
