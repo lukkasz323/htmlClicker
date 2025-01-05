@@ -1,6 +1,7 @@
 export class Game {
     htmlDivId;
     #rootDiv;
+    #ticks = 0;
     #money = 0;
     #resources = {};
     #miners = {};
@@ -16,12 +17,13 @@ export class Game {
         this.#rootDiv.append(money);
         this.#addResource("stone");
         this.#addResource("copper");
-        setInterval(() => this.#update(), 1);
+        setInterval(() => this.#update());
         requestAnimationFrame(() => this.#render());
     }
     #update() {
+        ++this.#ticks;
         for (const resourceName in this.#miners) {
-            this.#money += this.#miners[resourceName] * 0.01;
+            this.#money += this.#miners[resourceName];
         }
     }
     #render() {
