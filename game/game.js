@@ -1,7 +1,9 @@
 export class Game {
     htmlDivId;
     #rootDiv;
-    #ticks = 0;
+    #startDate;
+    #lastProcessDate;
+    #processDateDelta;
     #money = 0;
     #resources = {};
     #miners = {};
@@ -11,6 +13,8 @@ export class Game {
         console.log(this); // Debug
     }
     run() {
+        this.#startDate = Date.now();
+        this.#lastProcessDate = this.#startDate;
         const money = document.createElement("div");
         money.textContent = "$";
         money.id = "money";
@@ -20,14 +24,21 @@ export class Game {
         setInterval(() => this.#update());
         requestAnimationFrame(() => this.#render());
     }
-    #update() {
-        ++this.#ticks;
+    #process() {
         for (const resourceName in this.#miners) {
-            this.#money += this.#miners[resourceName];
+            this.#money += this.#miners[resourceName] * 0.001;
+        }
+    }
+    #update() {
+        const now = Date.now();
+        this.#processDateDelta = now - this.#lastProcessDate;
+        this.#lastProcessDate = now;
+        for (let i = 0; i < this.#processDateDelta; i++) {
+            this.#process();
         }
     }
     #render() {
-        document.getElementById("money").textContent = `$${this.#money.toFixed(2)}`;
+        document.getElementById("money").textContent = `$${this.#money.toFixed(2)} Time: ${(Date.now() - this.#startDate) / 1000}`;
         for (const resourceName in this.#miners) {
             document.getElementById(`miners-${resourceName}`).textContent = `$${this.#miners[resourceName]}/s`;
         }
