@@ -16,26 +16,20 @@ export class Game {
         this.#rootDiv.append(money);
         this.#addResource("stone");
         this.#addResource("copper");
-        // Update
-        console.log(1);
-        setInterval(() => {
-            console.log(2);
-            for (const resourceName in this.#miners) {
-                this.#money += this.#miners[resourceName];
-            }
-        }, 1000);
-        this.#render(1);
+        setInterval(() => this.#update(), 1);
+        requestAnimationFrame(() => this.#render());
     }
-    #render(a) {
-        const _this = this;
-        console.log(3);
-        requestAnimationFrame(() => {
-            console.log(4);
-            document.getElementById("money").textContent = `$${_this.#money}`;
-            document.getElementById("miners-stone").textContent = `$${_this.#miners["stone"]}/s`;
-            console.log(arguments.length, "xd");
-            requestAnimationFrame(this.#render);
-        });
+    #update() {
+        for (const resourceName in this.#miners) {
+            this.#money += this.#miners[resourceName] * 0.01;
+        }
+    }
+    #render() {
+        document.getElementById("money").textContent = `$${this.#money.toFixed(2)}`;
+        for (const resourceName in this.#miners) {
+            document.getElementById(`miners-${resourceName}`).textContent = `$${this.#miners[resourceName]}/s`;
+        }
+        requestAnimationFrame(() => this.#render());
     }
     #addResource(resourceName) {
         this.#resources[resourceName] = 0;
